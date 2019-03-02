@@ -13,11 +13,8 @@
     "scripts": ["static/js/backgroundListener.js"],
     "persistent": true
   },
-  "browser_action": {
-    "default_popup": "index.html",
-    "default_title": "Productivity Maximizer"
-  },
   "permissions": [
-    "tabs"
+    "tabs",
+    "*://*/*"
   ]
 }
