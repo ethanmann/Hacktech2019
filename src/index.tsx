@@ -4,12 +4,15 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-const anchor = document.createElement('div');
-anchor.id = 'extension-root';
-document.body.insertBefore(anchor, document.body.childNodes[0]);
+const extensionId = 'extension-root';
+if (!document.getElementById(extensionId)) {
+  const anchor = document.createElement('div');
+  anchor.id = extensionId;
+  document.body.insertBefore(anchor, document.body.childNodes[0]);
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('extension-root') as HTMLElement
-);
-registerServiceWorker();
+  ReactDOM.render(
+    <App />,
+    document.getElementById(extensionId) as HTMLElement
+  );
+  registerServiceWorker();
+}
