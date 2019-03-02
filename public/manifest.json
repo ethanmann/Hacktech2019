@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "Productivity Maximizer",
+  "version": "0.1",
+  "default_locale": "en",
+  "description": "Maximize productivity",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Productivity Maximizer"
+  },
+  "background": {
+    "scripts": [
+      "tabListener.js"
+    ],
+    "persistent": false
+  }
+}
