@@ -18,7 +18,7 @@ let overlayColor = INITIAL_OVERLAY_COLOR;
 let unproductiveTimer = 0;
 const TIMER_INTERVAL_MS = 50;
 const MAX_OVERLAY_PERCENT = 75;
-const potatoMode = true;
+const potatoMode = false;
 let audioPlayed = false;
 setInterval(() => {
   const timerDelta = (potatoMode ? 0.5 : 0.1) * (shouldBlock ? 1 : -1);
@@ -29,7 +29,7 @@ setInterval(() => {
   const fullSize = height === MAX_OVERLAY_PERCENT || width === MAX_OVERLAY_PERCENT;
   const maxPosition = 100 - MAX_OVERLAY_PERCENT;
   if (fullSize) {
-    if (!audioPlayed) {
+    if (!audioPlayed && potatoMode) {
       // const audio = new Audio('https://freesound.org/data/previews/362/362887_6048343-lq.mp3');
       const audio = new Audio('http://soundbible.com/mp3/Knife%20Scrape%20Horror-SoundBible.com-1519171758.mp3');
       audio.play();

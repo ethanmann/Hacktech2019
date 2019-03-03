@@ -5,23 +5,25 @@
 </head>
 <body>
   <div>
-    Unblock a current filter:
+    <div>Unblock a current filter:</div>
     <select id="blockedSitesMenu">
     </select>
     <input type="button" value="Unblock" id='unblockButton'>
   </div>
   <br>
   <div>
-    Add a new filter to block (term or domain/URL):
+    <div>Add a new filter to block (term or domain/URL):</div>
     <input type="text" id='newBlockFilter'>
     <input type="button" value="Block" id='blockButton'>
   </div>
   <br>
   <div>
-    Pick your mode (current mode is displayed):
-    <select id="modesMenu">
-    </select>
-    <input type="button" value="Set Mode" id='setModeButton'>
+    Enable blocking:
+    <input type="checkbox" id='enableBlockingButton'>
+  </div>
+  <div id='potatoModeDiv'>
+    Enable "potato mode" (extreme blocking):
+    <input type="checkbox" id="enablePotatoButton">
   </div>
   <script src="options.js"></script>
 </body>

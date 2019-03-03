@@ -1,10 +1,10 @@
 function load_dropdowns(){
+
   // take all of the stuff from chrome storage
   chrome.storage.sync.get({
-       object-literal-sort-keys: false, // https://stackoverflow.com/questions/45792683/tslint-preventing-error-the-key-is-not-sorted-alphabetically
-       blockedSites: ["test"],
-       currentMode: "no blocking",
-       allModes: ["custom blocking", "no blocking", "total blocking"]
+       "blockedSites": ["test"],
+       "blockingEnabled": false,
+       "potatoEnabled": false
   }, function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       for (let site of items.blockedSites){
@@ -13,7 +13,8 @@ function load_dropdowns(){
   //     document.getElementById('color').value = items.favoriteColor;
   //     document.getElementById('like').checked = items.likesColor;
   //   });
-  alert("TEST");
+      alert("TEST");
+  });
 }
 
 function unblock_site(){
@@ -26,7 +27,12 @@ function block_site(){
   return;
 }
 
-function set_mode(){
+function change_blocking_allowed(){
+  // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+  return;
+}
+
+function change_blocking_setting(){
   return;
 }
 
@@ -34,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
   load_dropdowns();
   document.getElementById('unblockButton').addEventListener('click',unblock_site);
   document.getElementById('blockButton').addEventListener('click',block_site);
-  document.getElementById('setModeButton').addEventListener('click',set_mode);
+  document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
+  document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });
 
 
