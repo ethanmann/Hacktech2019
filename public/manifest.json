@@ -4,12 +4,12 @@
   "version": "0.1",
   "description": "Maximize productivity",
   "icons": {
-    "16": "icon16.png",
-    "24": "icon24.png",
-    "32": "icon32.png",
-    "48": "icon48.png",
-    "64": "icon64.png",
-    "128": "icon128.png"
+    "16": "logo/icon16.png",
+    "24": "logo/icon24.png",
+    "32": "logo/icon32.png",
+    "48": "logo/icon48.png",
+    "64": "logo/icon64.png",
+    "128": "logo/icon128.png"
   },
   "background": {
     "scripts": ["static/js/backgroundListener.js"],
