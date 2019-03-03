@@ -4,7 +4,7 @@ function load_dropdowns(){
   chrome.storage.sync.get({
        "blockedSites": ["test"],
        "currentMode": "no blocking",
-       "allModes": ["custom blocking", "no blocking", "total blocking"]
+       "allModes": ["no blocking", "light blocking", "potato mode"]
   }, function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       for (let site of items.blockedSites){
@@ -26,7 +26,11 @@ function block_site(){
   return;
 }
 
-function set_mode(){
+function enable(){
+  return;
+}
+
+function disable(){
   return;
 }
 
