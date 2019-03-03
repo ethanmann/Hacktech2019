@@ -3,16 +3,16 @@ import posed from 'react-pose';
 
 interface IState {
   overlayScale: {
-    height: number,
-    width: number
+    heightPercent: number,
+    widthPercent: number
   }
 };
 
 class App extends React.Component<{}, IState> {
   public state = {
     overlayScale: {
-      height: 0,
-      width: 0
+      heightPercent: 0,
+      widthPercent: 0
     },
   };
 
@@ -39,8 +39,8 @@ class App extends React.Component<{}, IState> {
     const Overlay = posed.div({
       scale: {
         backgroundColor: 'blue',
-        height: overlayScale.height,
-        width: overlayScale.width
+        height: overlayScale.heightPercent * document.documentElement.clientHeight,
+        width: overlayScale.widthPercent * document.documentElement.clientWidth
       }
     });
     return (

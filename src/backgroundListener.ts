@@ -31,12 +31,12 @@ const handleTabChange = (tabId: number) => {
 let unproductiveTimer = 0;
 const TIMER_INTERVAL = 100;
 setInterval(() => {
-  unproductiveTimer += 0.5;
+  unproductiveTimer += 0.001;
 
   chrome.runtime.sendMessage({
     overlayScale: {
-      height: unproductiveTimer,
-      width: unproductiveTimer
+      heightPercent: Math.min(unproductiveTimer / 100, 1),
+      widthPercent: Math.min(unproductiveTimer / 100, 1)
     },
     type: 'OVERLAY_SIZE_CHANGE'
   });
@@ -44,8 +44,8 @@ setInterval(() => {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
     chrome.tabs.sendMessage(tab.id!, {
       overlayScale: {
-        height: unproductiveTimer,
-        width: unproductiveTimer
+        heightPercent: unproductiveTimer,
+        widthPercent: unproductiveTimer
       },
       type: 'OVERLAY_SIZE_CHANGE'
     });
