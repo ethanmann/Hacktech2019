@@ -1,4 +1,6 @@
+const defaultBlockedList = ['games', 'twitter.com', 'reddit.com'];
 let shouldBlock = false;
+let dataBlockedList = null;
 
 /***********
  * Overlay *
@@ -86,19 +88,20 @@ setInterval(() => {
 
 
 const isBlockedURL = (url: string | null) => {
+      let choiceList = null;
 
-  let blockedList = ['games', 'twitter.com', 'reddit.com'];
-  return chrome.storage.sync.get(["blockedSites"], (items) => {
-      if (items.blockedSites != null){
-        blockedList = items.blockedSites;
+      if (dataBlockedList === null){
+          choiceList = defaultBlockedList;
       }
-
+      else{
+        choiceList = dataBlockedList;
+      }
 
       if (url === null) {
         return false;
       }
 
-      for (const blocked of blockedList) {
+      for (const blocked of choiceList) {
         if (url.indexOf(blocked) !== -1) {
           return true;
         }
@@ -110,14 +113,20 @@ const isBlockedURL = (url: string | null) => {
 }
 
 const handleTabChange = (tabId: number) => {
-  chrome.tabs.get(tabId, (tab) => {
-    shouldBlock = isBlockedURL(tab.url!);
-    if (shouldBlock) {
-      chrome.tabs.executeScript(tabId, {
-        file: 'static/js/index.js',
-        runAt: 'document_start'
-      });
-    }
+  chrome.storage.sync.get(["blockedSites"], (items) => {
+
+    dataBlockedList = items.blockedSites;
+
+    chrome.tabs.get(tabId, (tab) => {
+      shouldBlock = isBlockedURL(tab.url!);
+      if (shouldBlock) {
+        chrome.tabs.executeScript(tabId, {
+          file: 'static/js/index.js',
+          runAt: 'document_start'
+        });
+      }
+    });
+
   });
 }
 
