@@ -1,17 +1,15 @@
-// const arr:string[] = ['google.com', 'games'];
+const blockedList = ['games','twitter.com','reddit.com'];
 
 function filteredURL(url: any){
   if (typeof(url) !== "string" || url === null){
     return false;
   }
-  // https://www.tutorialkart.com/typescript/typescript-for-loop/
-  // for(const item in ['google.com', 'games']){
-  //   if (url.indexOf(item) !== -1){
-  //     return true;
-  //   }
-  // }
-  if (url.indexOf('google.com') !== -1){
-    return true;
+
+  // https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html
+  for (const blocked of blockedList){
+    if (url.indexOf(blocked) !== -1){
+      return true;
+    }
   }
   return false;
 }
