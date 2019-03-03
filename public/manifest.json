@@ -4,10 +4,12 @@
   "version": "0.1",
   "description": "Maximize productivity",
   "icons": {
-    "16": "favicon.ico",
-    "24": "favicon.ico",
-    "32": "favicon.ico",
-    "64": "favicon.ico"
+    "16": "logo/icon16.png",
+    "24": "logo/icon24.png",
+    "32": "logo/icon32.png",
+    "48": "logo/icon48.png",
+    "64": "logo/icon64.png",
+    "128": "logo/icon128.png"
   },
   "background": {
     "scripts": ["static/js/backgroundListener.js"],
@@ -15,7 +17,7 @@
   },
   "permissions": [
     "tabs",
-    "storage", 
+    "storage",
     "*://*/*"
   ],
   "options_ui": {

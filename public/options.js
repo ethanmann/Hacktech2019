@@ -1,9 +1,10 @@
 function load_dropdowns(){
   // take all of the stuff from chrome storage
   chrome.storage.sync.get({
+       object-literal-sort-keys: false, // https://stackoverflow.com/questions/45792683/tslint-preventing-error-the-key-is-not-sorted-alphabetically
        blockedSites: ["test"],
        currentMode: "no blocking",
-       allModes: ["no blocking", "custom blocking", "total blocking"]
+       allModes: ["custom blocking", "no blocking", "total blocking"]
   }, function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       for (let site of items.blockedSites){
@@ -12,18 +13,21 @@ function load_dropdowns(){
   //     document.getElementById('color').value = items.favoriteColor;
   //     document.getElementById('like').checked = items.likesColor;
   //   });
+  alert("TEST");
 }
 
 function unblock_site(){
-
+  return;
 }
 
 function block_site(){
-
+  // add it in a way that keeps it sorted???
+  // or just call the .sort() method
+  return;
 }
 
 function set_mode(){
-
+  return;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
