@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Concentr8 Settings</title>
+</head>
+<body>
+  <div>
+    Unblock a current filter:
+    <select id="blockedSitesMenu">
+    </select>
+    <input type="button" value="Unblock" id='unblockButton'>
+  </div>
+  <br>
+  <div>
+    Add a new filter to block (term or domain/URL):
+    <input type="text" id='newBlockFilter'>
+    <input type="button" value="Block" id='blockButton'>
+  </div>
+  <br>
+  <div>
+    Pick your mode (current mode is displayed):
+    <select id="modesMenu">
+    </select>
+    <input type="button" value="Set Mode" id='setModeButton'>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>
+
+<!--https://developers.chrome.com/extensions/options -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
   <title>My Test Extension Options</title>
 </head>
 <body>
-<script src="src/options.js"></script>
 Favorite color:
 <select id="color">
  <option value="red">red</option>
@@ -12,17 +42,13 @@ Favorite color:
  <option value="blue">blue</option>
  <option value="yellow">yellow</option>
 </select>
-
 <label>
   <input type="checkbox" id="like">
   I like colors.
 </label>
-
 <div id="status"></div>
 <button id="save">Save</button>
 
-<!-- <script src="options.js"></script> -->
+<script src="options.js"></script>
 </body>
-</html>
-
-<!--https://developers.chrome.com/extensions/options>
+</html> -->
