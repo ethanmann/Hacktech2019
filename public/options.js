@@ -73,9 +73,8 @@ function block_site(){
   // allows duplicates, but shouldn't -> fix for the future
   chrome.storage.sync.get(["blockedSites"],function(items){
     var newItem = document.getElementById('newBlockFilter');
-    items.blockedSites.push(newItem.text);
+    items.blockedSites.push(newItem.value);
     newItem.value = "";
-    newItem.text = "";
     chrome.storage.sync.set({blockedSites: items.blockedSites}, load_dropdowns);
   });
 }
