@@ -3,15 +3,18 @@ let shouldBlock = false;
 /***********
  * Overlay *
  ***********/
-let overlayPosition = {
+const INITIAL_OVERLAY_POSITION = {
   x: 0,
   y: 0
 };
-let overlayMoveDirection = {
+const INITIAL_OVERLAY_MOVE_DIRECTION = {
   x: 1,
   y: 1
 };
-let overlayColor = 0;
+const INITIAL_OVERLAY_COLOR = 0;
+let overlayPosition = INITIAL_OVERLAY_POSITION;
+let overlayMoveDirection = INITIAL_OVERLAY_MOVE_DIRECTION;
+let overlayColor = INITIAL_OVERLAY_COLOR;
 let unproductiveTimer = 0;
 const TIMER_INTERVAL_MS = 50;
 const MAX_OVERLAY_PERCENT = 50;
@@ -37,6 +40,9 @@ setInterval(() => {
 
     const MAX_COLOR = 16777214;
     overlayColor = Math.floor(unproductiveTimer) % MAX_COLOR;
+  } else {
+    overlayPosition = INITIAL_OVERLAY_POSITION;
+    overlayColor = INITIAL_OVERLAY_COLOR;
   }
 
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {

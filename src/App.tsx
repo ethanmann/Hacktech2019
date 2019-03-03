@@ -56,11 +56,12 @@ class App extends React.Component<{}, IState> {
     });
 
     const hexColor = `#${overlay.color.toString(16).padStart(6, '0')}`;
-    console.log(hexColor); // tslint:disable-line no-console
     // tslint:disable object-literal-sort-keys
     const Overlay = posed.div({
       scale: {
         backgroundColor: hexColor,
+
+        pointerEvents: 'none',
 
         position: 'fixed',
         top: scaleVector(overlay.position).y,
