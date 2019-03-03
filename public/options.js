@@ -13,7 +13,8 @@ function load_dropdowns(){
   //     document.getElementById('color').value = items.favoriteColor;
   //     document.getElementById('like').checked = items.likesColor;
   //   });
-  alert("TEST");
+      alert("TEST");
+  });
 }
 
 function unblock_site(){
@@ -26,11 +27,12 @@ function block_site(){
   return;
 }
 
-function enable_blocking(){
+function change_blocking_allowed(){
+  // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
   return;
 }
 
-function disable(){
+function change_blocking_setting(){
   return;
 }
 
@@ -38,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
   load_dropdowns();
   document.getElementById('unblockButton').addEventListener('click',unblock_site);
   document.getElementById('blockButton').addEventListener('click',block_site);
-  document.getElementById('enableBlockingButton').addEventListener('click',enable_blocking);
-  document.getElementById('enablePotatoButton').addEventListener('click',enable_potato);
+  document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
+  document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });
 
 
