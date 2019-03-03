@@ -43,6 +43,7 @@ function load_dropdowns(){
   chrome.storage.sync.get(["blockedSites", "blockingEnabled", "potatoEnabled"], function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       if (items.blockedSites != null && items.blockedSites.length > 0){
+        blockedSitesMenu.innerHTML = "";
         for (let site of items.blockedSites){
             blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
         }
