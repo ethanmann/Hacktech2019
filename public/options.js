@@ -1,5 +1,17 @@
 function load_dropdowns(){
-
+  // take all of the stuff from chrome storage
+  chrome.storage.sync.get({
+       blockedSites: ["test"],
+       currentMode: "no blocking",
+       allModes: ["no blocking", "custom blocking", "total blocking"]
+  }, function(items) {
+      const blockedSitesMenu = document.getElementById('blockedSitesMenu');
+      for (let site of items.blockedSites){
+          blockedSitesMenu.innerHTML += site;
+      }
+  //     document.getElementById('color').value = items.favoriteColor;
+  //     document.getElementById('like').checked = items.likesColor;
+  //   });
 }
 
 function unblock_site(){
