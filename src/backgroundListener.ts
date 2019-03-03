@@ -108,9 +108,7 @@ const isBlockedURL = (url: string | null) => {
       }
 
       return false;
-  });
-
-}
+  };
 
 const handleTabChange = (tabId: number) => {
   chrome.storage.sync.get(["blockedSites"], (items) => {
