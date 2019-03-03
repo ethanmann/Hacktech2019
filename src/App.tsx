@@ -2,17 +2,31 @@ import * as React from 'react';
 import posed from 'react-pose';
 
 interface IState {
-  overlayScale: {
-    heightPercent: number,
-    widthPercent: number
+  overlay: {
+    color: number,
+    position: {
+      x: number,
+      y: number
+    },
+    size: {
+      x: number,
+      y: number
+    }
   }
 };
 
 class App extends React.Component<{}, IState> {
   public state = {
-    overlayScale: {
-      heightPercent: 0,
-      widthPercent: 0
+    overlay: {
+      color: 0,
+      position: {
+        x: 0,
+        y: 0
+      },
+      size: {
+        x: 0,
+        y: 0
+      }
     },
   };
 
@@ -21,7 +35,7 @@ class App extends React.Component<{}, IState> {
       switch (message.type) {
         case 'OVERLAY_SIZE_CHANGE':
           const newState = {
-            overlayScale: message.overlayScale
+            overlay: message.overlay
           };
           this.setState(newState);
           break;
@@ -33,21 +47,28 @@ class App extends React.Component<{}, IState> {
 
   public render() {
     const {
-      overlayScale
+      overlay
     } = this.state;
 
+    const scaleVector = ({ x, y }: { x: number, y: number }) => ({
+      x: x / 100 * document.documentElement.clientWidth,
+      y: y / 100 * document.documentElement.clientHeight
+    });
+
+    const hexColor = `#${overlay.color.toString(16).padStart(6, '0')}`;
+    console.log(hexColor); // tslint:disable-line no-console
     // tslint:disable object-literal-sort-keys
     const Overlay = posed.div({
       scale: {
-        backgroundColor: 'blue',
+        backgroundColor: hexColor,
 
         position: 'fixed',
-        top: 0,
-        left: 0,
+        top: scaleVector(overlay.position).y,
+        left: scaleVector(overlay.position).x,
         zIndex: 10000000,
 
-        height: overlayScale.heightPercent * document.documentElement.clientHeight,
-        width: overlayScale.widthPercent * document.documentElement.clientWidth
+        height: scaleVector(overlay.size).y,
+        width: scaleVector(overlay.size).x
       }
     });
     // tslint:enable object-literal-sort-keys
