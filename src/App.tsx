@@ -62,6 +62,8 @@ class App extends React.Component<{}, IState> {
       scale: {
         backgroundColor: hexColor,
 
+        pointerEvents: 'none',
+
         position: 'fixed',
         top: scaleVector(overlay.position).y,
         left: scaleVector(overlay.position).x,
