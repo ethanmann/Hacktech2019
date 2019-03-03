@@ -1,11 +1,19 @@
+// const arr:string[] = ['google.com', 'games'];
+
 function filteredURL(url: any){
   if (typeof(url) !== "string" || url === null){
     return false;
   }
-  else if (url.indexOf('google.com') === -1){
-    return false;
+  // https://www.tutorialkart.com/typescript/typescript-for-loop/
+  // for(const item in ['google.com', 'games']){
+  //   if (url.indexOf(item) !== -1){
+  //     return true;
+  //   }
+  // }
+  if (url.indexOf('google.com') !== -1){
+    return true;
   }
-  return true;
+  return false;
 }
 
 function checkURLFromID(tabId: any){
