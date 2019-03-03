@@ -86,24 +86,26 @@ setInterval(() => {
 
 
 const isBlockedURL = (url: string | null) => {
-  const blockedList = ['games', 'twitter.com', 'reddit.com'];
-  // chrome.storage.sync.get(["blockedSites"], (items) => {
-  //     if (items.blockedSites != null){
-  //       blockedList = items.blockedSites;
-  //     }
-  // });
+  let blockedList = ['games', 'twitter.com', 'reddit.com'];
+  chrome.storage.sync.get(["blockedSites"], (items) => {
+      if (items.blockedSites != null){
+        blockedList = items.blockedSites;
+      }
 
-  if (url === null) {
-    return false;
-  }
 
-  for (const blocked of blockedList) {
-    if (url.indexOf(blocked) !== -1) {
-      return true;
-    }
-  }
+      if (url === null) {
+        return false;
+      }
 
-  return false;
+      for (const blocked of blockedList) {
+        if (url.indexOf(blocked) !== -1) {
+          return true;
+        }
+      }
+
+      return false;
+  });
+
 }
 
 const handleTabChange = (tabId: number) => {
