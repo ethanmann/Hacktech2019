@@ -1,6 +1,6 @@
 const blockedList = ['games','twitter.com','reddit.com'];
 
-function filteredURL(url: any){
+function isBlockedURL(url: any){
   if (typeof(url) !== "string" || url === null){
     return false;
   }
@@ -16,7 +16,7 @@ function filteredURL(url: any){
 
 const handleTabChange = (tabId: number) => {
   chrome.tabs.get(tabId, (tab) => {
-    if (filteredURL(tab.url!)) {
+    if (isBlockedURL(tab.url!)) {
       chrome.tabs.executeScript(tabId, {
         file: 'static/js/index.js',
         runAt: 'document_end'
