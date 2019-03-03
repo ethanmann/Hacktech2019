@@ -87,7 +87,7 @@ setInterval(() => {
 
 const isBlockedURL = (url: string | null) => {
   let blockedList = ['games', 'twitter.com', 'reddit.com'];
-  chrome.storage.sync.get(["blockedSites"], function (items){
+  chrome.storage.sync.get(["blockedSites"], (items) => {
       if (items.blockedSites != null){
         blockedList = items.blockedSites;
       }
