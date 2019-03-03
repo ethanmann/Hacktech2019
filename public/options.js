@@ -1,27 +1,29 @@
 function initialize_data(){
   chrome.storage.sync.get(["blockedSites"], function(item) {
-    if (item == null){
+    if (item.blockedSites == null){
       chrome.storage.sync.set({
         "blockedSites":new Array()
       });
     }
-  }
+  });
 
   chrome.storage.sync.get(["blockingEnabled"], function(item) {
-    if (item == null){
+    if (item.blockingEnabled == null){
       chrome.storage.sync.set({
         "blockingEnabled":false
       });
     }
-  }
+  });
 
   chrome.storage.sync.get(["potatoEnabled"], function(item) {
-    if (item == null){
+    if (item.potatoEnabled == null){
       chrome.storage.sync.set({
         "potatoEnabled":false
       });
     }
-  }
+
+    console.log("initialized data");
+  });
 }
 
 function load_dropdowns(){
@@ -38,51 +40,56 @@ function load_dropdowns(){
       }
       document.getElementById('enableBlockingButton').checked = items.blockingEnabled;
       document.getElementById('enablePotatoButton').checked = items.potatoEnabled;
+
+
+      console.log("loaded dropdowns");
+
   });
 }
 
-function unblock_site(){
+// function unblock_site(){
+//
+//   chrome.storage.sync.get(["blockedSites"], function(items) {
+//          // https://love2dev.com/blog/javascript-remove-from-array/
+//          const newBlockedSites = items.blockedSites.filter(function(ele){
+//            return ele != value;
+//             });
+//         chrome.storage.sync.set({ "blockedSites": newBlockedSites}, load_dropdowns);
+//       });
+//
+// }
+//
+// function block_site(){
+//   console.log("click");
+//   alert("click");
+//   // add it in a way that keeps it sorted???
+//   // or just call the .sort() method
+//   // allows duplicates, but shouldn't -> fix for the future
+//   chrome.storage.sync.get(["blockedSites"],function(items){
+//     var newItem = document.getElementById('newBlockFilter');
+//     items.blockedSites = items.blockedSites.push(newItem.text);
+//     newItem.value = "";
+//     newItem.text = "";
+//     chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
+//        });
+// }
+//
+// function change_blocking_allowed(){
+//   // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+//   return;
+// }
+//
+// function change_blocking_setting(){
+//   return;
+// }
 
-  chrome.storage.sync.get({
-       "blockedSites"]}, function(items) {
-         // https://love2dev.com/blog/javascript-remove-from-array/
-         const newBlockedSites = items.blockedSites.filter(function(ele){
-           return ele != value;
-            });
-        chrome.storage.sync.set({ "blockedSites": newBlockedSites}, load_dropdowns);
-      });
-}
-
-function block_site(){
-  console.log("click");
-  alert("click");
-  // add it in a way that keeps it sorted???
-  // or just call the .sort() method
-  // allows duplicates, but shouldn't -> fix for the future
-  chrome.storage.sync.get({"blockedSites":new Array(),},function(items){
-    var newItem = document.getElementById('newBlockFilter');
-    items.blockedSites.push(newItem.text);
-    newItem.text = "";
-    chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
-       });
-}
-
-function change_blocking_allowed(){
-  // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-  return;
-}
-
-function change_blocking_setting(){
-  return;
-}
-
+initialize_data();
 document.addEventListener('DOMContentLoaded', () => {
-  initialize_data();
-  load_dropdowns();
-  document.getElementById('unblockButton').addEventListener('click',unblock_site);
-  document.getElementById('blockButton').addEventListener('click',block_site);
-  document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
-  document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
+    load_dropdowns();
+    // document.getElementById('unblockButton').addEventListener('click',unblock_site);
+    // document.getElementById('blockButton').addEventListener('click',block_site);
+    // document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
+    // document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });
 
 
