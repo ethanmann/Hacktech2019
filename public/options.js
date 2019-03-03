@@ -76,7 +76,7 @@ function block_site(){
     items.blockedSites.push(newItem.text);
     newItem.value = "";
     newItem.text = "";
-    chrome.storage.sync.set({blockedSites: items.blockedSites}, load_dropdowns);
+    chrome.storage.sync.set({blockedSites: items.blockedSites}, load_dropdowns););
 }
 //
 // function change_blocking_allowed(){
