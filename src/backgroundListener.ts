@@ -1,7 +1,6 @@
 const defaultBlockedList: string[] = ['games', 'twitter.com', 'reddit.com'];
 let shouldBlock = false;
 let dataBlockedList: (null | string[]) = null;
-let activeInfoVar: any = null;
 
 /***********
  * Overlay *
@@ -113,7 +112,6 @@ const isBlockedURL = (url: string | null) => {
 
 const handleTabChange = (tabId: number) => {
   chrome.storage.sync.get(["blockedSites"], (items) => {
-
     dataBlockedList = items.blockedSites;
 
     chrome.tabs.get(tabId, (tab) => {
@@ -125,25 +123,22 @@ const handleTabChange = (tabId: number) => {
         });
       }
     });
-
   });
 }
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
-   activeInfoVar = activeInfo;
-   chrome.storage.sync.get(['blockingEnabled'], (items) => {
-     if (items.blockingEnabled){
-        handleTabChange(activeInfoVar.tabId);
+   chrome.storage.sync.get(['blockingEnabled'], ({ blockingEnabled }) => {
+     if (blockingEnabled) {
+        handleTabChange(activeInfo.tabId);
      }
    });
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  activeInfoVar = tab;
   if (changeInfo.status === 'complete') {
-    chrome.storage.sync.get(['blockingEnabled'], (items) => {
-      if (items.blockingEnabled){
-         handleTabChange(activeInfoVar.tabId);
+    chrome.storage.sync.get(['blockingEnabled'], ({ blockingEnabled }) => {
+      if (blockingEnabled) {
+         handleTabChange(tab.id!);
       }
     });
   }
