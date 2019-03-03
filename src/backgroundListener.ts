@@ -17,9 +17,11 @@ let overlayMoveDirection = INITIAL_OVERLAY_MOVE_DIRECTION;
 let overlayColor = INITIAL_OVERLAY_COLOR;
 let unproductiveTimer = 0;
 const TIMER_INTERVAL_MS = 50;
-const MAX_OVERLAY_PERCENT = 50;
+const MAX_OVERLAY_PERCENT = 75;
+const potatoMode = true;
+let audioPlayed = false;
 setInterval(() => {
-  const timerDelta = 0.1 * (shouldBlock ? 1 : -1);
+  const timerDelta = (potatoMode ? 0.5 : 0.1) * (shouldBlock ? 1 : -1);
   unproductiveTimer = Math.max(0, unproductiveTimer + timerDelta);
   const height = Math.min(unproductiveTimer, MAX_OVERLAY_PERCENT);
   const width = Math.min(unproductiveTimer, MAX_OVERLAY_PERCENT);
@@ -27,20 +29,41 @@ setInterval(() => {
   const fullSize = height === MAX_OVERLAY_PERCENT || width === MAX_OVERLAY_PERCENT;
   const maxPosition = 100 - MAX_OVERLAY_PERCENT;
   if (fullSize) {
-    if (overlayPosition.x < 0 || overlayPosition.x > maxPosition) {
+    if (!audioPlayed) {
+      // const audio = new Audio('https://freesound.org/data/previews/362/362887_6048343-lq.mp3');
+      const audio = new Audio('http://soundbible.com/mp3/Knife%20Scrape%20Horror-SoundBible.com-1519171758.mp3');
+      audio.play();
+      audioPlayed = true;
+    }
+
+    if (overlayPosition.x === 0 || overlayPosition.x === maxPosition) {
       overlayMoveDirection.x *= -1;
     }
-    if (overlayPosition.y < 0 || overlayPosition.y > maxPosition) {
+    if (overlayPosition.y === 0 || overlayPosition.y === maxPosition) {
       overlayMoveDirection.y *= -1;
     }
 
-    const MOVE_SPEED = unproductiveTimer / 1000;
-    overlayPosition.x += overlayMoveDirection.x * MOVE_SPEED;
-    overlayPosition.y += overlayMoveDirection.y * MOVE_SPEED;
+    const MOVE_SPEED = potatoMode ? 3 : (unproductiveTimer / 1000);
+    overlayPosition.x += (overlayMoveDirection.x * MOVE_SPEED) + (potatoMode ? (2 * Math.random() - 1 ) : 0);
+    overlayPosition.y += (overlayMoveDirection.y * MOVE_SPEED) + (potatoMode ? (2 * Math.random() - 1) : 0);
+
+    if (overlayPosition.x < 0) {
+      overlayPosition.x = 0;
+    }
+    if (overlayPosition.x > maxPosition) {
+      overlayPosition.x = maxPosition;
+    }
+    if (overlayPosition.y < 0) {
+      overlayPosition.y = 0;
+    }
+    if (overlayPosition.y > maxPosition) {
+      overlayPosition.y = maxPosition;
+    }
 
     const MAX_COLOR = 16777214;
-    overlayColor = Math.floor(unproductiveTimer) % MAX_COLOR;
+    overlayColor = Math.floor(unproductiveTimer * (potatoMode ? 15 : 1)) % MAX_COLOR;
   } else {
+    overlayMoveDirection = INITIAL_OVERLAY_MOVE_DIRECTION;
     overlayPosition = INITIAL_OVERLAY_POSITION;
     overlayColor = INITIAL_OVERLAY_COLOR;
   }
