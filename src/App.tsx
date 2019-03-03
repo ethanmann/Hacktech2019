@@ -36,13 +36,21 @@ class App extends React.Component<{}, IState> {
       overlayScale
     } = this.state;
 
+    // tslint:disable object-literal-sort-keys
     const Overlay = posed.div({
       scale: {
         backgroundColor: 'blue',
+
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        zIndex: 10000000,
+
         height: overlayScale.heightPercent * document.documentElement.clientHeight,
         width: overlayScale.widthPercent * document.documentElement.clientWidth
       }
     });
+    // tslint:enable object-literal-sort-keys
     return (
       <div className='app'>
         <Overlay pose='scale' />

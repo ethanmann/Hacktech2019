@@ -1,61 +1,60 @@
-const blockedList = ['games','twitter.com','reddit.com'];
+let shouldBlock = false;
 
-function isBlockedURL(url: any){
-  if (typeof(url) !== "string"){
+/***********
+ * Overlay *
+ ***********/
+let unproductiveTimer = 0;
+const TIMER_INTERVAL_MS = 100;
+const MAX_OVERLAY_PERCENT = 75;
+setInterval(() => {
+  const timerDelta = 0.01 * (shouldBlock ? 1 : -1);
+  unproductiveTimer = Math.max(0, unproductiveTimer + timerDelta);
+
+  const message = {
+    overlayScale: {
+      heightPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100),
+      widthPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100)
+    },
+    type: 'OVERLAY_SIZE_CHANGE'
+  };
+
+  chrome.runtime.sendMessage(message);
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id!, message);
+  });
+}, TIMER_INTERVAL_MS);
+
+const blockedList = ['games', 'twitter.com', 'reddit.com'];
+
+const isBlockedURL = (url: string | null) => {
+  if (url === null) {
     return false;
   }
 
-  // https://www.typescriptlang.org/docs/handbook/iterators-and-generators.html
-  for (const blocked of blockedList){
-    if (url.indexOf(blocked) !== -1){
+  for (const blocked of blockedList) {
+    if (url.indexOf(blocked) !== -1) {
       return true;
     }
   }
+
   return false;
 }
 
 const handleTabChange = (tabId: number) => {
   chrome.tabs.get(tabId, (tab) => {
-    if (isBlockedURL(tab.url!)) {
+    shouldBlock = isBlockedURL(tab.url!);
+    if (shouldBlock) {
       chrome.tabs.executeScript(tabId, {
         file: 'static/js/index.js',
-        runAt: 'document_end'
-      });
-      chrome.tabs.insertCSS(tabId, {
-        file: 'static/css/index.css'
+        runAt: 'document_start'
       });
     }
   });
 }
 
-let unproductiveTimer = 0;
-const TIMER_INTERVAL = 100;
-setInterval(() => {
-  unproductiveTimer += 0.001;
-
-  chrome.runtime.sendMessage({
-    overlayScale: {
-      heightPercent: Math.min(unproductiveTimer / 100, 1),
-      widthPercent: Math.min(unproductiveTimer / 100, 1)
-    },
-    type: 'OVERLAY_SIZE_CHANGE'
-  });
-
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    chrome.tabs.sendMessage(tab.id!, {
-      overlayScale: {
-        heightPercent: unproductiveTimer,
-        widthPercent: unproductiveTimer
-      },
-      type: 'OVERLAY_SIZE_CHANGE'
-    });
-  });
-}, TIMER_INTERVAL);
-
 chrome.tabs.onActivated.addListener((activeInfo) => {
    handleTabChange(activeInfo.tabId);
 })
-
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
     handleTabChange(tabId);
