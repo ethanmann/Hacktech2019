@@ -48,6 +48,12 @@ function load_dropdowns(){
             blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
         }
       }
+      if (items.blockingEnabled){
+        document.getElementById('potatoModeDiv').style.display = "none";
+      }
+      else{
+        document.getElementById('potatoModeDiv').style.display = "block";
+      }
       document.getElementById('enableBlockingButton').checked = items.blockingEnabled;
       document.getElementById('enablePotatoButton').checked = items.potatoEnabled;
 
@@ -80,10 +86,17 @@ function block_site(){
   });
 }
 //
-// function change_blocking_allowed(){
-//   // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-//   return;
-// }
+function change_blocking_allowed(){
+  // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
+  var enableBoxChecked= document.getElementById('enableBlockingButton').checked;
+  chrome.storage.sync.set({"blockingEnabled": enableBoxChecked}, load_dropdowns);
+  // if (enableBoxChecked){
+  //   document.getElementById('potatoModeDiv').style.display = "none";
+  // }
+  // else{
+  //   document.getElementById('potatoModeDiv').style.display = "block";
+  // }
+}
 //
 // function change_blocking_setting(){
 //   return;
@@ -93,7 +106,7 @@ initialize_data();
 document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('unblockButton').addEventListener('click',unblock_site);
     document.getElementById('blockButton').addEventListener('click',block_site);
-    // document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
+    document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
     // document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });
 

@@ -1,6 +1,7 @@
 const defaultBlockedList: string[] = ['games', 'twitter.com', 'reddit.com'];
 let shouldBlock = false;
 let dataBlockedList: (null | string[]) = null;
+let activeInfoVar: any = null;
 
 /***********
  * Overlay *
@@ -129,11 +130,22 @@ const handleTabChange = (tabId: number) => {
 }
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
-   handleTabChange(activeInfo.tabId);
+   activeInfoVar = activeInfo;
+   chrome.storage.sync.get(['blockingEnabled'], (items) => {
+     if (items.blockingEnabled){
+        handleTabChange(activeInfoVar.tabId);
+     }
+   });
 })
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  activeInfoVar = tab;
   if (changeInfo.status === 'complete') {
-    handleTabChange(tabId);
+    chrome.storage.sync.get(['blockingEnabled'], (items) => {
+      if (items.blockingEnabled){
+         handleTabChange(activeInfoVar.tabId);
+      }
+    });
   }
 });
 
