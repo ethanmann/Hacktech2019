@@ -1,7 +1,7 @@
+import * as R from 'ramda';
+
 const defaultBlockedList: string[] = ['games', 'twitter.com', 'reddit.com'];
 let shouldBlock = false;
-let dataBlockedList: (null | string[]) = null;
-
 /***********
  * Overlay *
  ***********/
@@ -33,7 +33,8 @@ setInterval(() => {
   if (fullSize) {
     if (!audioPlayed && potatoMode) {
       // const audio = new Audio('https://freesound.org/data/previews/362/362887_6048343-lq.mp3');
-      const audio = new Audio('http://soundbible.com/mp3/Knife%20Scrape%20Horror-SoundBible.com-1519171758.mp3');
+      const NAILS_ON_CHALKBOARD_AUDIO = 'http://soundbible.com/mp3/Knife%20Scrape%20Horror-SoundBible.com-1519171758.mp3';
+      const audio = new Audio(NAILS_ON_CHALKBOARD_AUDIO);
       audio.play();
       audioPlayed = true;
     }
@@ -46,8 +47,9 @@ setInterval(() => {
     }
 
     const MOVE_SPEED = potatoMode ? 3 : (unproductiveTimer / 1000);
-    overlayPosition.x += (overlayMoveDirection.x * MOVE_SPEED) + (potatoMode ? (2 * Math.random() - 1 ) : 0);
-    overlayPosition.y += (overlayMoveDirection.y * MOVE_SPEED) + (potatoMode ? (2 * Math.random() - 1) : 0);
+    const getPerturbation = () => potatoMode ? (2 * Math.random() - 1) : 0;
+    overlayPosition.x += (overlayMoveDirection.x * MOVE_SPEED) + getPerturbation();
+    overlayPosition.y += (overlayMoveDirection.y * MOVE_SPEED) + getPerturbation();
 
     if (overlayPosition.x < 0) {
       overlayPosition.x = 0;
@@ -85,37 +87,22 @@ setInterval(() => {
   });
 }, TIMER_INTERVAL_MS);
 
+const isBlockedURL = (blockedList: string[] | null, url: string | null) => {
+  if (url === null) {
+    return false;
+  }
 
+  const choiceList = (blockedList === null || blockedList.length === 0)
+    ? defaultBlockedList
+    : blockedList;
 
-const isBlockedURL = (url: string | null) => {
-      let choiceList = null;
-
-      if (dataBlockedList === null || dataBlockedList.length === 0){
-          choiceList = defaultBlockedList;
-      }
-      else{
-        choiceList = dataBlockedList;
-      }
-
-      if (url === null) {
-        return false;
-      }
-
-      for (const blocked of choiceList) {
-        if (url.indexOf(blocked) !== -1) {
-          return true;
-        }
-      }
-
-      return false;
-  };
+  return R.any(blocked => url.indexOf(blocked) !== -1, choiceList);
+};
 
 const handleTabChange = (tabId: number) => {
-  chrome.storage.sync.get(["blockedSites"], (items) => {
-    dataBlockedList = items.blockedSites;
-
+  chrome.storage.sync.get(['blockedSites', 'blockingEnabled'], ({ blockedSites, blockingEnabled }) => {
     chrome.tabs.get(tabId, (tab) => {
-      shouldBlock = isBlockedURL(tab.url!);
+      shouldBlock = blockingEnabled && isBlockedURL(blockedSites, tab.url!);
       if (shouldBlock) {
         chrome.tabs.executeScript(tabId, {
           file: 'static/js/index.js',
@@ -124,23 +111,15 @@ const handleTabChange = (tabId: number) => {
       }
     });
   });
-}
+};
 
-chrome.tabs.onActivated.addListener((activeInfo) => {
-   chrome.storage.sync.get(['blockingEnabled'], ({ blockingEnabled }) => {
-     if (blockingEnabled) {
-        handleTabChange(activeInfo.tabId);
-     }
-   });
-})
+chrome.tabs.onActivated.addListener(({ tabId }) => {
+  handleTabChange(tabId);
+});
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === 'complete') {
-    chrome.storage.sync.get(['blockingEnabled'], ({ blockingEnabled }) => {
-      if (blockingEnabled) {
-         handleTabChange(tab.id!);
-      }
-    });
+    handleTabChange(tabId);
   }
 });
 

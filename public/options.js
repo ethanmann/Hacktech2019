@@ -1,68 +1,52 @@
-function initialize_data(){
-
-  chrome.storage.sync.get(["blockedSites"], function(item) {
-
-    if (typeof(item.blockedSites) != typeof(new Array())){
+const ensureValidSettings = () => {
+  chrome.storage.sync.get(['blockingEnabled', 'blockedSites', 'potatoEnabled'], ({ blockingEnabled, blockedSites, potatoEnabled }) => {
+    if (blockedSites === null || blockedSites.length === 0) {
       chrome.storage.sync.set({
-        "blockedSites":new Array()
+        blockedSites: []
       });
     }
-  });
 
-  chrome.storage.sync.get(["blockingEnabled"], function(item) {
-    if (item.blockingEnabled == null){
+    if (blockingEnabled === null) {
       chrome.storage.sync.set({
-        "blockingEnabled":false
+        blockingEnabled: false
       });
     }
-  });
 
-  chrome.storage.sync.get(["potatoEnabled"], function(item) {
-    if (item.potatoEnabled == null){
+    if (potatoEnabled === null) {
       chrome.storage.sync.set({
-        "potatoEnabled":false
-      }, function(){
-        console.log("data initialized");
-        load_dropdowns();
+        potatoEnabled: false
       });
     }
-    else{
-      console.log("data initialized");
-      load_dropdowns();
-    }
+
+    console.log('Initialized settings!');
   });
-}
+};
 
-function load_dropdowns(){
-
-  // chrome.storage.sync.set({
-  //   "blockedSites":new Array("test1", "test2", "test3"),
-  // }, null);
-
-  // take all of the stuff from chrome storage
-  chrome.storage.sync.get(["blockedSites", "blockingEnabled", "potatoEnabled"], function(items) {
+const loadUI = () => {
+  chrome.storage.sync.get(['blockedSites', 'blockingEnabled', 'potatoEnabled'], function({ blockedSites, blockingEnabled, potatoEnabled }) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
-      if (items.blockedSites != null && items.blockedSites.length > 0){
-        blockedSitesMenu.innerHTML = "";
-        for (let site of items.blockedSites){
-            blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
+      if (blockedSites !== null && blockedSites.length !== 0) {
+        blockedSitesMenu.innerHTML = '';
+        for (const site of blockedSites) {
+            blockedSitesMenu.innerHTML += '<option value="' + site + '">' + site + '</option>';
         }
       }
-      if (items.blockingEnabled){
-        document.getElementById('potatoModeDiv').style.display = "none";
-      }
-      else{
-        document.getElementById('potatoModeDiv').style.display = "block";
-      }
-      document.getElementById('enableBlockingButton').checked = items.blockingEnabled;
-      document.getElementById('enablePotatoButton').checked = items.potatoEnabled;
 
-      console.log("loaded dropdowns");
+    document.getElementById('potatoModeDiv').style.display = blockingEnabled ?
+      'none' : 'block';
+    document.getElementById('enableBlockingButton').checked = blockingEnabled;
+    document.getElementById('enablePotatoButton').checked = potatoEnabled;
+
+    console.log("Loaded dropdowns!");
   });
 }
 
+const initialize = () => {
+  ensureValidSettings();
+  loadUI();
+};
+
 // function unblock_site(){
-//
 //   chrome.storage.sync.get(["blockedSites"], function(items) {
 //          // https://love2dev.com/blog/javascript-remove-from-array/
 //          const newBlockedSites = items.blockedSites.filter(function(ele){
@@ -70,43 +54,35 @@ function load_dropdowns(){
 //             });
 //         chrome.storage.sync.set({ "blockedSites": newBlockedSites}, load_dropdowns);
 //       });
-//
 // }
-//
-function block_site(){
-  console.log("click");
+
+const blockSite = () => {
   // add it in a way that keeps it sorted???
   // or just call the .sort() method
   // allows duplicates, but shouldn't -> fix for the future
-  chrome.storage.sync.get(["blockedSites"],function(items){
-    var newItem = document.getElementById('newBlockFilter');
-    items.blockedSites.push(newItem.value);
-    newItem.value = "";
-    chrome.storage.sync.set({blockedSites: items.blockedSites}, load_dropdowns);
+  // Store in a sorted set, maybe?
+  chrome.storage.sync.get(['blockedSites'], ({ blockedSites }) => {
+    const newItem = document.getElementById('newBlockFilter');
+    blockedSites.push(newItem.value);
+    newItem.value = '';
+    chrome.storage.sync.set({ blockedSites });
+    loadUI();
   });
-}
-//
-function change_blocking_allowed(){
-  // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
-  var enableBoxChecked= document.getElementById('enableBlockingButton').checked;
-  chrome.storage.sync.set({"blockingEnabled": enableBoxChecked}, load_dropdowns);
-  // if (enableBoxChecked){
-  //   document.getElementById('potatoModeDiv').style.display = "none";
-  // }
-  // else{
-  //   document.getElementById('potatoModeDiv').style.display = "block";
-  // }
-}
-//
-// function change_blocking_setting(){
-//   return;
-// }
+};
 
-initialize_data();
+const toggleBlockingEnabled = () => {
+  const enableBoxChecked = document.getElementById('enableBlockingButton').checked;
+  chrome.storage.sync.set({
+    blockingEnabled: enableBoxChecked
+  });
+  loadUI();
+};
+
+initialize();
 document.addEventListener('DOMContentLoaded', () => {
     // document.getElementById('unblockButton').addEventListener('click',unblock_site);
-    document.getElementById('blockButton').addEventListener('click',block_site);
-    document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
+    document.getElementById('blockButton').addEventListener('click', blockSite);
+    document.getElementById('enableBlockingButton').addEventListener('click',toggleBlockingEnabled);
     // document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });
 

@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Productivity Maximizer",
+  "name": "Concentr8",
   "version": "0.1",
-  "description": "Maximize productivity",
+  "description": "Maximize your productivity!",
   "icons": {
     "16": "logo/logo16.png",
     "24": "logo/logo24.png",
