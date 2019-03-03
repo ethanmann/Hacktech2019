@@ -3,24 +3,54 @@ let shouldBlock = false;
 /***********
  * Overlay *
  ***********/
+let overlayPosition = {
+  x: 0,
+  y: 0
+};
+let overlayMoveDirection = {
+  x: 1,
+  y: 1
+};
+let overlayColor = 0;
 let unproductiveTimer = 0;
-const TIMER_INTERVAL_MS = 100;
-const MAX_OVERLAY_PERCENT = 75;
+const TIMER_INTERVAL_MS = 50;
+const MAX_OVERLAY_PERCENT = 50;
 setInterval(() => {
-  const timerDelta = 0.01 * (shouldBlock ? 1 : -1);
+  const timerDelta = 0.1 * (shouldBlock ? 1 : -1);
   unproductiveTimer = Math.max(0, unproductiveTimer + timerDelta);
+  const height = Math.min(unproductiveTimer, MAX_OVERLAY_PERCENT);
+  const width = Math.min(unproductiveTimer, MAX_OVERLAY_PERCENT);
 
-  const message = {
-    overlayScale: {
-      heightPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100),
-      widthPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100)
-    },
-    type: 'OVERLAY_SIZE_CHANGE'
-  };
+  const fullSize = height === MAX_OVERLAY_PERCENT || width === MAX_OVERLAY_PERCENT;
+  const maxPosition = 100 - MAX_OVERLAY_PERCENT;
+  if (fullSize) {
+    if (overlayPosition.x < 0 || overlayPosition.x > maxPosition) {
+      overlayMoveDirection.x *= -1;
+    }
+    if (overlayPosition.y < 0 || overlayPosition.y > maxPosition) {
+      overlayMoveDirection.y *= -1;
+    }
 
-  chrome.runtime.sendMessage(message);
+    const MOVE_SPEED = unproductiveTimer / 1000;
+    overlayPosition.x += overlayMoveDirection.x * MOVE_SPEED;
+    overlayPosition.y += overlayMoveDirection.y * MOVE_SPEED;
+
+    const MAX_COLOR = 16777214;
+    overlayColor = Math.floor(unproductiveTimer) % MAX_COLOR;
+  }
+
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    chrome.tabs.sendMessage(tab.id!, message);
+    chrome.tabs.sendMessage(tab.id!, {
+      overlay: {
+        color: overlayColor,
+        position: overlayPosition,
+        size: {
+          x: height,
+          y: width
+        }
+      },
+      type: 'OVERLAY_SIZE_CHANGE'
+    });
   });
 }, TIMER_INTERVAL_MS);
 
