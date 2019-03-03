@@ -1,6 +1,6 @@
-const defaultBlockedList = ['games', 'twitter.com', 'reddit.com'];
+const defaultBlockedList: string[] = ['games', 'twitter.com', 'reddit.com'];
 let shouldBlock = false;
-let dataBlockedList = null;
+let dataBlockedList: (null | string[]) = null;
 
 /***********
  * Overlay *
