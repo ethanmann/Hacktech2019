@@ -1,3 +1,27 @@
+function load_dropdowns(){
+
+}
+
+function unblock_site(){
+
+}
+
+function block_site(){
+
+}
+
+function set_mode(){
+
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  load_dropdowns();
+  document.getElementById('unblockButton').addEventListener('click',unblock_site);
+  document.getElementById('blockButton').addEventListener('click',block_site);
+  document.getElementById('setModeButton').addEventListener('click',set_mode);
+});
+
+
 // // Saves options to chrome.storage
 // function save_options() {
 //   var color = document.getElementById('color').value;
