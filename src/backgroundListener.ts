@@ -90,7 +90,7 @@ setInterval(() => {
 const isBlockedURL = (url: string | null) => {
       let choiceList = null;
 
-      if (dataBlockedList === null){
+      if (dataBlockedList === null || dataBlockedList.length === 0){
           choiceList = defaultBlockedList;
       }
       else{
