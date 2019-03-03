@@ -1,30 +1,70 @@
+function initialize_data(){
+  chrome.storage.sync.get(["blockedSites"], function(item) {
+    if (item == null){
+      chrome.storage.sync.set({
+        "blockedSites":new Array()
+      });
+    }
+  }
+
+  chrome.storage.sync.get(["blockingEnabled"], function(item) {
+    if (item == null){
+      chrome.storage.sync.set({
+        "blockingEnabled":false
+      });
+    }
+  }
+
+  chrome.storage.sync.get(["potatoEnabled"], function(item) {
+    if (item == null){
+      chrome.storage.sync.set({
+        "potatoEnabled":false
+      });
+    }
+  }
+}
+
 function load_dropdowns(){
 
+  // chrome.storage.sync.set({
+  //   "blockedSites":new Array("test1", "test2", "test3"),
+  // }, null);
+
   // take all of the stuff from chrome storage
-  chrome.storage.sync.get({
-       "blockedSites": ["test"],
-       "blockingEnabled": false,
-       "potatoEnabled": false
-  }, function(items) {
+  chrome.storage.sync.get(["blockedSites", "blockingEnabled", "potatoEnabled"], function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       for (let site of items.blockedSites){
-          blockedSitesMenu.innerHTML += site;
+          blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
       }
-  //     document.getElementById('color').value = items.favoriteColor;
-  //     document.getElementById('like').checked = items.likesColor;
-  //   });
-      alert("TEST");
+      document.getElementById('enableBlockingButton').checked = items.blockingEnabled;
+      document.getElementById('enablePotatoButton').checked = items.potatoEnabled;
   });
 }
 
 function unblock_site(){
-  return;
+
+  chrome.storage.sync.get({
+       "blockedSites"]}, function(items) {
+         // https://love2dev.com/blog/javascript-remove-from-array/
+         const newBlockedSites = items.blockedSites.filter(function(ele){
+           return ele != value;
+            });
+        chrome.storage.sync.set({ "blockedSites": newBlockedSites}, load_dropdowns);
+      });
 }
 
 function block_site(){
+  console.log("click");
+  alert("click");
   // add it in a way that keeps it sorted???
   // or just call the .sort() method
-  return;
+  // allows duplicates, but shouldn't -> fix for the future
+  chrome.storage.sync.get({"blockedSites":new Array(),},function(items){
+    var newItem = document.getElementById('newBlockFilter');
+    items.blockedSites.push(newItem.text);
+    newItem.text = "";
+    chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
+       });
 }
 
 function change_blocking_allowed(){
@@ -37,6 +77,7 @@ function change_blocking_setting(){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initialize_data();
   load_dropdowns();
   document.getElementById('unblockButton').addEventListener('click',unblock_site);
   document.getElementById('blockButton').addEventListener('click',block_site);
