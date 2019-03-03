@@ -1,6 +1,8 @@
 function initialize_data(){
+
   chrome.storage.sync.get(["blockedSites"], function(item) {
-    if (item.blockedSites == null){
+
+    if (typeof(item.blockedSites) != typeof(new Array())){
       chrome.storage.sync.set({
         "blockedSites":new Array()
       });
@@ -19,10 +21,15 @@ function initialize_data(){
     if (item.potatoEnabled == null){
       chrome.storage.sync.set({
         "potatoEnabled":false
+      }, function(){
+        console.log("data initialized");
+        load_dropdowns();
       });
     }
-
-    console.log("initialized data");
+    else{
+      console.log("data initialized");
+      load_dropdowns();
+    }
   });
 }
 
@@ -35,15 +42,15 @@ function load_dropdowns(){
   // take all of the stuff from chrome storage
   chrome.storage.sync.get(["blockedSites", "blockingEnabled", "potatoEnabled"], function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
-      for (let site of items.blockedSites){
-          blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
+      if (items.blockedSites != null && items.blockedSites.length > 0){
+        for (let site of items.blockedSites){
+            blockedSitesMenu.innerHTML += "<option value=\"" + site + "\">" + site + "</option>";
+        }
       }
       document.getElementById('enableBlockingButton').checked = items.blockingEnabled;
       document.getElementById('enablePotatoButton').checked = items.potatoEnabled;
 
-
       console.log("loaded dropdowns");
-
   });
 }
 
@@ -66,11 +73,10 @@ function block_site(){
   // allows duplicates, but shouldn't -> fix for the future
   chrome.storage.sync.get(["blockedSites"],function(items){
     var newItem = document.getElementById('newBlockFilter');
-    items.blockedSites = items.blockedSites.push(newItem.text);
+    items.blockedSites.push(newItem.text);
     newItem.value = "";
     newItem.text = "";
-    chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
-       });
+    chrome.storage.sync.set({blockedSites: items.blockedSites}, load_dropdowns);
 }
 //
 // function change_blocking_allowed(){
@@ -84,9 +90,8 @@ function block_site(){
 
 initialize_data();
 document.addEventListener('DOMContentLoaded', () => {
-    load_dropdowns();
     // document.getElementById('unblockButton').addEventListener('click',unblock_site);
-    // document.getElementById('blockButton').addEventListener('click',block_site);
+    document.getElementById('blockButton').addEventListener('click',block_site);
     // document.getElementById('enableBlockingButton').addEventListener('click',change_blocking_allowed);
     // document.getElementById('enablePotatoButton').addEventListener('click',change_blocking_setting);
 });

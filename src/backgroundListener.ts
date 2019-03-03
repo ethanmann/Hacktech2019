@@ -83,9 +83,16 @@ setInterval(() => {
   });
 }, TIMER_INTERVAL_MS);
 
-const blockedList = ['games', 'twitter.com', 'reddit.com'];
+
 
 const isBlockedURL = (url: string | null) => {
+  let blockedList = ['games', 'twitter.com', 'reddit.com'];
+  chrome.storage.sync.get(["blockedSites"], function (items){
+      if (items.blockedSites != null){
+        blockedList = items.blockedSites;
+      }
+  });
+
   if (url === null) {
     return false;
   }
