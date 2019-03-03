@@ -59,20 +59,19 @@ function load_dropdowns(){
 //
 // }
 //
-// function block_site(){
-//   console.log("click");
-//   alert("click");
-//   // add it in a way that keeps it sorted???
-//   // or just call the .sort() method
-//   // allows duplicates, but shouldn't -> fix for the future
-//   chrome.storage.sync.get(["blockedSites"],function(items){
-//     var newItem = document.getElementById('newBlockFilter');
-//     items.blockedSites = items.blockedSites.push(newItem.text);
-//     newItem.value = "";
-//     newItem.text = "";
-//     chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
-//        });
-// }
+function block_site(){
+  console.log("click");
+  // add it in a way that keeps it sorted???
+  // or just call the .sort() method
+  // allows duplicates, but shouldn't -> fix for the future
+  chrome.storage.sync.get(["blockedSites"],function(items){
+    var newItem = document.getElementById('newBlockFilter');
+    items.blockedSites = items.blockedSites.push(newItem.text);
+    newItem.value = "";
+    newItem.text = "";
+    chrome.storage.sync.set({blockedSites: items.blockedSites}, null);
+       });
+}
 //
 // function change_blocking_allowed(){
 //   // https://www.w3schools.com/howto/howto_js_toggle_hide_show.asp
