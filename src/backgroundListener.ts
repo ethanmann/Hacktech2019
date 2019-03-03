@@ -1,7 +1,7 @@
 const blockedList = ['games','twitter.com','reddit.com'];
 
 function isBlockedURL(url: any){
-  if (typeof(url) !== "string" || url === null){
+  if (typeof(url) !== "string"){
     return false;
   }
 
