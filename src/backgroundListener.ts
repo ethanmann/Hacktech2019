@@ -1,3 +1,29 @@
+let shouldBlock = false;
+
+/***********
+ * Overlay *
+ ***********/
+let unproductiveTimer = 0;
+const TIMER_INTERVAL_MS = 100;
+const MAX_OVERLAY_PERCENT = 75;
+setInterval(() => {
+  const timerDelta = 0.01 * (shouldBlock ? 1 : -1);
+  unproductiveTimer = Math.max(0, unproductiveTimer + timerDelta);
+
+  const message = {
+    overlayScale: {
+      heightPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100),
+      widthPercent: Math.min(unproductiveTimer / 100, MAX_OVERLAY_PERCENT / 100)
+    },
+    type: 'OVERLAY_SIZE_CHANGE'
+  };
+
+  chrome.runtime.sendMessage(message);
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id!, message);
+  });
+}, TIMER_INTERVAL_MS);
+
 const blockedList = ['games', 'twitter.com', 'reddit.com'];
 
 const isBlockedURL = (url: string | null) => {
@@ -16,33 +42,15 @@ const isBlockedURL = (url: string | null) => {
 
 const handleTabChange = (tabId: number) => {
   chrome.tabs.get(tabId, (tab) => {
-    if (isBlockedURL(tab.url!)) {
+    shouldBlock = isBlockedURL(tab.url!);
+    if (shouldBlock) {
       chrome.tabs.executeScript(tabId, {
         file: 'static/js/index.js',
-        runAt: 'document_end'
+        runAt: 'document_start'
       });
     }
   });
 }
-
-let unproductiveTimer = 0;
-const TIMER_INTERVAL = 100;
-setInterval(() => {
-  unproductiveTimer += 0.01;
-
-  const message = {
-    overlayScale: {
-      heightPercent: Math.min(unproductiveTimer / 100, 3/4),
-      widthPercent: Math.min(unproductiveTimer / 100, 3/4)
-    },
-    type: 'OVERLAY_SIZE_CHANGE'
-  };
-
-  chrome.runtime.sendMessage(message);
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    chrome.tabs.sendMessage(tab.id!, message);
-  });
-}, TIMER_INTERVAL);
 
 chrome.tabs.onActivated.addListener((activeInfo) => {
    handleTabChange(activeInfo.tabId);
