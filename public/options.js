@@ -3,8 +3,8 @@ function load_dropdowns(){
   // take all of the stuff from chrome storage
   chrome.storage.sync.get({
        "blockedSites": ["test"],
-       "currentMode": "no blocking",
-       "allModes": ["no blocking", "light blocking", "potato mode"]
+       "blockingEnabled": false,
+       "potatoEnabled": false
   }, function(items) {
       const blockedSitesMenu = document.getElementById('blockedSitesMenu');
       for (let site of items.blockedSites){
@@ -26,7 +26,7 @@ function block_site(){
   return;
 }
 
-function enable(){
+function enable_blocking(){
   return;
 }
 
@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   load_dropdowns();
   document.getElementById('unblockButton').addEventListener('click',unblock_site);
   document.getElementById('blockButton').addEventListener('click',block_site);
-  document.getElementById('setModeButton').addEventListener('click',set_mode);
+  document.getElementById('enableBlockingButton').addEventListener('click',enable_blocking);
+  document.getElementById('enablePotatoButton').addEventListener('click',enable_potato);
 });
 
 
