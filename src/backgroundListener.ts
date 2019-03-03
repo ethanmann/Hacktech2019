@@ -16,25 +16,51 @@ function filteredURL(url: any){
   return false;
 }
 
-function checkURLFromID(tabId: any){
+const handleTabChange = (tabId: number) => {
   chrome.tabs.get(tabId, (tab) => {
-    if (filteredURL(tab.url)){
+    if (filteredURL(tab.url!)) {
       chrome.tabs.executeScript(tabId, {
         file: 'static/js/index.js',
         runAt: 'document_end'
+      });
+      chrome.tabs.insertCSS(tabId, {
+        file: 'static/css/index.css'
       });
     }
   });
 }
 
-// https://developer.chrome.com/extensions/tabs
+let unproductiveTimer = 0;
+const TIMER_INTERVAL = 100;
+setInterval(() => {
+  unproductiveTimer += 0.5;
+
+  chrome.runtime.sendMessage({
+    overlayScale: {
+      height: unproductiveTimer,
+      width: unproductiveTimer
+    },
+    type: 'OVERLAY_SIZE_CHANGE'
+  });
+
+  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
+    chrome.tabs.sendMessage(tab.id!, {
+      overlayScale: {
+        height: unproductiveTimer,
+        width: unproductiveTimer
+      },
+      type: 'OVERLAY_SIZE_CHANGE'
+    });
+  });
+}, TIMER_INTERVAL);
+
 chrome.tabs.onActivated.addListener((activeInfo) => {
-   checkURLFromID(activeInfo.tabId);
+   handleTabChange(activeInfo.tabId);
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
-    checkURLFromID(tabId);
+    handleTabChange(tabId);
   }
 });
 

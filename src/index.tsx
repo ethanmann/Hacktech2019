@@ -10,8 +10,11 @@ let extensionElement = document.getElementById(extensionId);
 if (!extensionElement) {
   extensionElement = document.createElement('div');
   extensionElement.id = extensionId;
-  document.body.insertBefore(extensionElement, document.body.childNodes[0]);
-  ReactDOM.render(<App />, extensionElement);
+  document.body.appendChild(extensionElement);
+  ReactDOM.render(
+    <App />,
+    extensionElement
+  );
 
   registerServiceWorker();
 }
