@@ -1,4 +1,4 @@
-To run this, the files have been uploaded as a zip. Download the zip, go to the Chrome browser, open extensions, go to load unpacked, select the build subdirectory of the zip, and then the extension will install onto Chrome. Click on the extension to set preferences.
+To run this, the files have been uploaded as a zip (to https://drive.google.com/file/d/1Ngs9VAWVWf2cCKQ10vGiOeVGm729RdJt/view?usp=sharing). If this link doesn't work, you can download the zip from this repo, but it is not our most current version. Download the zip, go to the Chrome browser, open extensions, go to load unpacked, select the build subdirectory of the zip, and then the extension will install onto Chrome. Click on the extension to set preferences.
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
