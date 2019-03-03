@@ -5,18 +5,21 @@
 </head>
 <body>
   <div>
-    Unblock a site:
-    <select id="blockedSites">
+    Unblock a current filter:
+    <select id="blockedSitesMenu">
     </select>
+    <input type="button" value="Unblock" id='unblockButton'>
   </div>
   <div>
-    Block a new site:
-    <input text>
-    <input button>
+    Add a new filter to block (term or domain/URL):
+    <input type="text" id='newBlockFilter'>
+    <input type="button" value="Block" id='blockButton'>
   </div>
   <div>
-    Pick your mode:
-    <input radio>
+    Pick your mode (current mode is displayed):
+    <select id="modesMenu">
+    </select>
+    <input type="button" value="Set Mode" id='setModeButton'>
   </div>
   <script src="options.js"></script>
 </body>
